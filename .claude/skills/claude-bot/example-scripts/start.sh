@@ -14,8 +14,8 @@ NUM_WORKERS="${3:-2}"
 SESSION="claude-bot"
 
 # Validate project directory
-if [ ! -f "${PROJECT_DIR}/llm.plan.status" ]; then
-  echo "ERROR: ${PROJECT_DIR}/llm.plan.status not found."
+if [ ! -f "${PROJECT_DIR}/.tmp/llm.plan.status" ]; then
+  echo "ERROR: ${PROJECT_DIR}/.tmp/llm.plan.status not found."
   echo "Create a ticket file first. See README.md for format."
   exit 1
 fi

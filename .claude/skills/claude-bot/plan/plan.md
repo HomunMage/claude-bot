@@ -1,14 +1,7 @@
----
-name: claude-plan
-description: Plan phase — discuss with user, analyze project, break down work into small testable tickets, produce llm.plan.status and CLAUDE.md. Run this BEFORE /claude-bot.
-disable-model-invocation: true
-argument-hint: <project_dir>
----
-
-# claude-plan — Phase 1: Planning
+# Planning Phase
 
 This is Phase 1 of the two-phase workflow:
-1. **`/claude-plan`** (this) — Interactive with user: discuss, design, produce tickets
+1. **Planning** (this) — Interactive with user: discuss, design, produce tickets
 2. **`/claude-bot`** — Autonomous: execute the tickets in tmux
 
 ## Your Job
@@ -82,17 +75,17 @@ Once aligned, create tickets following these rules:
 
 Once user approves the tickets, create these files in the project:
 
-### `llm.plan.status`
+### `.tmp/llm.plan.status`
 The ticket list (as shown above). This is the input for `/claude-bot`.
 
 ### `CLAUDE.md`
-Dev rules tailored to THIS project. Start from the template at [../../CLAUDE.md](../../CLAUDE.md) and customize:
+Dev rules tailored to THIS project. Customize:
 - Add project-specific test commands
 - Add project-specific format/lint commands
 - Add scope boundaries (which dirs each ticket should touch)
 - Add any conventions the user mentioned
 
-### `llm.working.log`
+### `.tmp/llm.working.log`
 Initialize empty (or with a planning entry):
 ```
 [PLAN] Phase 1-3 planned: N tickets across M phases
@@ -104,6 +97,28 @@ If there were design decisions from the discussion, write them here:
 - API contract decisions
 - Data model decisions
 - Things to watch out for
+
+### `.tmp/claude-bot/*.sh` (runner scripts)
+Design and write custom runner scripts tailored to THIS project's needs. Place them in `.tmp/claude-bot/`.
+
+Reference [example-scripts/](../example-scripts/) for patterns and ideas, but **do not copy them blindly** — design scripts that fit the project.
+
+Possible script designs:
+- **Separate workers**: `worker1.sh` (backend), `worker2.sh` (frontend) — each with different scope, context, and constraints for parallel execution
+- **Multi-role session**: `workers.sh` — multiple roles collaborating in one session (e.g., architect reviews while coder implements)
+- **Sequential pipeline**: `pipeline.sh` — Phase 1 tickets first, then Phase 2, with dependency awareness
+- **Single worker**: `worker.sh` — simple loop for small projects
+
+Consider:
+- How many workers can run in parallel without file conflicts?
+- Do workers need different contexts or permissions?
+- Should there be an orchestrator, or is a simple loop enough?
+- What coordination mechanism fits? (git lock, trigger files, sequential)
+
+```bash
+# Example: user runs the scripts directly
+bash .tmp/claude-bot/start.sh
+```
 
 ## Step 5: Confirm
 

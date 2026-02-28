@@ -3,10 +3,10 @@
 ## On Start — Read These First
 
 1. `README.md` — project overview, architecture, tech stack
-2. `llm.plan.status` — ticket list and current status (pick `[ ]` tickets to work on)
-3. `llm.working.log` — abstract of recent completed work
+2. `.tmp/llm.plan.status` — ticket list and current status (pick `[ ]` tickets to work on)
+3. `.tmp/llm.working.log` — abstract of recent completed work
 4. `.tmp/llm.working.notes` — detailed working notes (if exists, read for more context)
-5. Any `llm*.md` files — design docs, API specs, references
+5. Any `.tmp/llm*md` files — design docs, API specs, references
 
 ## Work Cycle
 
@@ -18,7 +18,7 @@ git status
 ```
 
 ### Step 2: Pick ONE Ticket
-- Read `llm.plan.status`
+- Read `.tmp/llm.plan.status`
 - Find the first `[ ]` (unchecked) ticket
 - Work on ONLY that ticket — one ticket per session
 
@@ -57,16 +57,16 @@ rmdir _git.lock
 ```
 
 ### Step 7: Update Status
-1. Mark the ticket `[x]` in `llm.plan.status`
-2. Append a summary to `llm.working.log`:
+1. Mark the ticket `[x]` in `.tmp/llm.plan.status`
+2. Append a summary to `.tmp/llm.working.log`:
    ```
    [W{id}] <what was done> — <files changed>
    ```
 
 ## Temporary Files
 
-- **All temp/scratch work MUST go in `./.tmp/`** (project-local), never `/tmp/` or other system dirs.
-- `.tmp/` is gitignored — safe for intermediate outputs, downloads, generated files, build artifacts, etc.
+- **All temp/scratch work MUST go in `./.tmp/`** (project-local), never `/tmp/`.
+- `.tmp/` should be in .gitignore — safe for intermediate outputs, downloads, generated files, build artifacts, etc.
 - Create `.tmp/` if it doesn't exist before writing to it.
 
 ## Rules

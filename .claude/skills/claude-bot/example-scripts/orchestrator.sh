@@ -25,7 +25,7 @@ plan_tasks() {
   local CONTEXT_FILES=""
 
   # Build context from available files
-  for f in "llm.plan.status" "llm.working.log" "CLAUDE.md" "README.md"; do
+  for f in ".tmp/llm.plan.status" ".tmp/llm.working.log" "CLAUDE.md" "README.md"; do
     if [ -f "${PROJECT_DIR}/${f}" ]; then
       CONTEXT_FILES="${CONTEXT_FILES}
 --- ${f} ---
@@ -54,7 +54,7 @@ ${CONTEXT_FILES}
 There are ${NUM_WORKERS} workers available.
 
 YOUR JOB:
-1. Read llm.plan.status — find tickets marked [ ] (not yet done)
+1. Read .tmp/llm.plan.status — find tickets marked [ ] (not yet done)
 2. Assign ONE small ticket to each worker
 3. Ensure workers won't conflict (different files/features)
 4. If fewer tickets than workers, assign IDLE to extra workers

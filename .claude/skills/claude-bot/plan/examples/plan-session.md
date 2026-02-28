@@ -81,12 +81,15 @@ This shows what a `/claude-plan` session looks like.
 ## Claude creates the files
 
 Files written:
-- `llm.plan.status` — 7 tickets across 3 phases
+- `.tmp/llm.plan.status` — 7 tickets across 3 phases
 - `CLAUDE.md` — dev rules with `npm test`, `npx prettier --write .`, Prisma conventions
-- `llm.working.log` — initialized with `[PLAN] 7 tickets across 3 phases`
+- `.tmp/llm.working.log` — initialized with `[PLAN] 7 tickets across 3 phases`
 - `.tmp/llm.working.notes` — design decisions (JWT, bcrypt, Prisma, pagination approach)
+- `.tmp/claude-bot/worker1.sh` — worker for Phase 1-2 tickets (database + auth scope)
+- `.tmp/claude-bot/worker2.sh` — worker for Phase 3 tickets (CRUD + pagination scope)
+- `.tmp/claude-bot/start.sh` — launches both workers in tmux with orchestration
 
 Now the user can run:
 ```bash
-bash claude-bot/skills/claude-bot/examples/start.sh /home/user/my-api-project
+bash .tmp/claude-bot/start.sh
 ```

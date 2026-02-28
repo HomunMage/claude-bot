@@ -51,19 +51,19 @@ $(head -200 "${PROJECT_DIR}/README.md")
 "
 fi
 
-# Read llm.plan.status (ticket list)
-if [ -f "${PROJECT_DIR}/llm.plan.status" ]; then
+# Read .tmp/llm.plan.status (ticket list)
+if [ -f "${PROJECT_DIR}/.tmp/llm.plan.status" ]; then
   CONTEXT="${CONTEXT}
---- llm.plan.status (Tickets) ---
-$(cat "${PROJECT_DIR}/llm.plan.status")
+--- .tmp/llm.plan.status (Tickets) ---
+$(cat "${PROJECT_DIR}/.tmp/llm.plan.status")
 "
 fi
 
-# Read llm.working.log (abstract of recent work)
-if [ -f "${PROJECT_DIR}/llm.working.log" ]; then
+# Read .tmp/llm.working.log (abstract of recent work)
+if [ -f "${PROJECT_DIR}/.tmp/llm.working.log" ]; then
   CONTEXT="${CONTEXT}
---- llm.working.log (Recent Work) ---
-$(tail -50 "${PROJECT_DIR}/llm.working.log")
+--- .tmp/llm.working.log (Recent Work) ---
+$(tail -50 "${PROJECT_DIR}/.tmp/llm.working.log")
 "
 fi
 
@@ -75,8 +75,8 @@ $(tail -100 "${PROJECT_DIR}/.tmp/llm.working.notes")
 "
 fi
 
-# Read any other llm*.md files
-for f in "${PROJECT_DIR}"/llm*.md; do
+# Read any other .tmp/llm*.md files
+for f in "${PROJECT_DIR}"/.tmp/llm*.md; do
   [ -f "$f" ] || continue
   BASENAME=$(basename "$f")
   case "$BASENAME" in
@@ -93,7 +93,7 @@ if [ -n "$TASK_DESC" ]; then
   TASK_PROMPT="YOUR ASSIGNED TASK: ${TASK_DESC}
 Focus ONLY on this specific task. Do not work on other tasks."
 else
-  TASK_PROMPT="Pick the first unchecked [ ] ticket from llm.plan.status and implement it."
+  TASK_PROMPT="Pick the first unchecked [ ] ticket from .tmp/llm.plan.status and implement it."
 fi
 
 log "Phase 2: Calling Claude to work on task..."
@@ -135,11 +135,11 @@ WORKFLOW — Follow these steps IN ORDER:
    rmdir ${GIT_LOCK}
 
 6. UPDATE STATUS:
-   - Edit llm.plan.status: change [ ] to [x] for your completed ticket
-   - Append to llm.working.log: [W${WORKER_ID}] <what you did> — <files changed>
+   - Edit .tmp/llm.plan.status: change [ ] to [x] for your completed ticket
+   - Append to .tmp/llm.working.log: [W${WORKER_ID}] <what you did> — <files changed>
    - Git commit the status update:
      while ! mkdir ${GIT_LOCK} 2>/dev/null; do sleep 2; done
-     git add llm.plan.status llm.working.log
+     git add .tmp/llm.plan.status .tmp/llm.working.log
      git commit -m 'status: mark ticket done [W${WORKER_ID}]'
      rmdir ${GIT_LOCK}
 
