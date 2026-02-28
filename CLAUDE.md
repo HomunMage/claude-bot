@@ -69,6 +69,24 @@ rmdir _git.lock
 - `.tmp/` should be in .gitignore — safe for intermediate outputs, downloads, generated files, build artifacts, etc.
 - Create `.tmp/` if it doesn't exist before writing to it.
 
+## Autonomous Agent Teams
+
+Use `/claude-bot` to set up autonomous agent teams that work while you're away.
+
+1. **Plan**: Run `/claude-bot` and discuss your project — Claude breaks work into tickets and designs custom runner scripts at `.tmp/claude-bot/`
+2. **Launch**: `bash .tmp/claude-bot/start.sh` — workers start solving tickets in tmux
+3. **Walk away**: Go eat lunch, take a break — agents work autonomously
+4. **Check results**: `tmux attach -t claude-bot` or read `.tmp/llm.working.log`
+
+See `.claude/skills/claude-bot/` for the full skill, example scripts, and planning workflow.
+
+## Changelog
+
+- Maintain `CHANGELOG.md` at the project root.
+- Use **vMajor.Minor** format only (e.g., `v1.0`, `v1.1`, `v2.0`) — no patch level.
+- Versions may jump (e.g., `v1.1` → `v1.5` or `v1.1` → `v3.0`) — a version jump signals a huge change.
+- Each entry: version, date, and bullet list of what changed in short; not all details.
+
 ## Rules
 
 - **ONE ticket per session.** Small steps. Do not batch multiple tickets.
