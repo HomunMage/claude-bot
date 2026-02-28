@@ -67,11 +67,11 @@ $(tail -50 "${PROJECT_DIR}/llm.working.log")
 "
 fi
 
-# Read .claude/llm.working.notes (detailed notes)
-if [ -f "${PROJECT_DIR}/.claude/llm.working.notes" ]; then
+# Read .tmp/llm.working.notes (detailed notes)
+if [ -f "${PROJECT_DIR}/.tmp/llm.working.notes" ]; then
   CONTEXT="${CONTEXT}
---- .claude/llm.working.notes (Detailed Notes) ---
-$(tail -100 "${PROJECT_DIR}/.claude/llm.working.notes")
+--- .tmp/llm.working.notes (Detailed Notes) ---
+$(tail -100 "${PROJECT_DIR}/.tmp/llm.working.notes")
 "
 fi
 

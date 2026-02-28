@@ -5,7 +5,7 @@
 1. `README.md` — project overview, architecture, tech stack
 2. `llm.plan.status` — ticket list and current status (pick `[ ]` tickets to work on)
 3. `llm.working.log` — abstract of recent completed work
-4. `.claude/llm.working.notes` — detailed working notes (if exists, read for more context)
+4. `.tmp/llm.working.notes` — detailed working notes (if exists, read for more context)
 5. Any `llm*.md` files — design docs, API specs, references
 
 ## Work Cycle
@@ -62,6 +62,12 @@ rmdir _git.lock
    ```
    [W{id}] <what was done> — <files changed>
    ```
+
+## Temporary Files
+
+- **All temp/scratch work MUST go in `./.tmp/`** (project-local), never `/tmp/` or other system dirs.
+- `.tmp/` is gitignored — safe for intermediate outputs, downloads, generated files, build artifacts, etc.
+- Create `.tmp/` if it doesn't exist before writing to it.
 
 ## Rules
 

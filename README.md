@@ -127,7 +127,7 @@ These files live in your **target project** (not in claude-bot):
 | `README.md` | Yes | Project overview |
 | `llm.plan.status` | Yes | Ticket list with `[ ]`/`[x]` checkboxes |
 | `llm.working.log` | Auto-created | Abstract of completed work (append-only) |
-| `.claude/llm.working.notes` | Optional | Detailed working notes |
+| `.tmp/llm.working.notes` | Optional | Detailed working notes |
 | `llm*.md` | Optional | Design docs, references, specs |
 
 ### llm.plan.status format

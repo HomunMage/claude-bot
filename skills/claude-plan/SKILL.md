@@ -98,7 +98,7 @@ Initialize empty (or with a planning entry):
 [PLAN] Phase 1-3 planned: N tickets across M phases
 ```
 
-### `.claude/llm.working.notes` (optional)
+### `.tmp/llm.working.notes` (optional)
 If there were design decisions from the discussion, write them here:
 - Architecture choices and why
 - API contract decisions

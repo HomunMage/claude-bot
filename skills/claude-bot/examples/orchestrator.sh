@@ -34,11 +34,11 @@ $(cat "${PROJECT_DIR}/${f}")
     fi
   done
 
-  # Also include .claude/llm.working.notes if it exists
-  if [ -f "${PROJECT_DIR}/.claude/llm.working.notes" ]; then
+  # Also include .tmp/llm.working.notes if it exists
+  if [ -f "${PROJECT_DIR}/.tmp/llm.working.notes" ]; then
     CONTEXT_FILES="${CONTEXT_FILES}
---- .claude/llm.working.notes ---
-$(cat "${PROJECT_DIR}/.claude/llm.working.notes")
+--- .tmp/llm.working.notes ---
+$(cat "${PROJECT_DIR}/.tmp/llm.working.notes")
 "
   fi
 

@@ -84,7 +84,7 @@ Files written:
 - `llm.plan.status` — 7 tickets across 3 phases
 - `CLAUDE.md` — dev rules with `npm test`, `npx prettier --write .`, Prisma conventions
 - `llm.working.log` — initialized with `[PLAN] 7 tickets across 3 phases`
-- `.claude/llm.working.notes` — design decisions (JWT, bcrypt, Prisma, pagination approach)
+- `.tmp/llm.working.notes` — design decisions (JWT, bcrypt, Prisma, pagination approach)
 
 Now the user can run:
 ```bash
