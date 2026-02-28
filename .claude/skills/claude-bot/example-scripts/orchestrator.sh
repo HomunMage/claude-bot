@@ -9,7 +9,7 @@ PROJECT_DIR="${1:?Usage: orchestrator.sh <project_dir> [max_cycles] [num_workers
 PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
 MAX_CYCLES="${2:-50}"
 NUM_WORKERS="${3:-2}"
-SESSION="claude-bot"
+SESSION="$(basename "$PROJECT_DIR")"
 LOG_FILE="${PROJECT_DIR}/out/orchestrator.log"
 CYCLE=0
 
@@ -168,7 +168,7 @@ collect_results() {
 # ─── Main Loop ───────────────────────────────────────────────────────────────
 
 log "========================================="
-log "claude-bot orchestrator started"
+log "${SESSION} orchestrator started"
 log "Project:    ${PROJECT_DIR}"
 log "Max cycles: ${MAX_CYCLES}"
 log "Workers:    ${NUM_WORKERS}"

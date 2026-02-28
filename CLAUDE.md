@@ -76,7 +76,7 @@ Use `/claude-bot` to set up autonomous agent teams that work while you're away.
 1. **Plan**: Run `/claude-bot` and discuss your project — Claude breaks work into tickets and designs custom runner scripts at `.tmp/claude-bot/`
 2. **Launch**: `bash .tmp/claude-bot/start.sh` — workers start solving tickets in tmux
 3. **Walk away**: Go eat lunch, take a break — agents work autonomously
-4. **Check results**: `tmux attach -t claude-bot` or read `.tmp/llm.working.log`
+4. **Check results**: `tmux attach -t <project-folder-name>` or read `.tmp/llm.working.log`
 
 See `.claude/skills/claude-bot/` for the full skill, example scripts, and planning workflow.
 

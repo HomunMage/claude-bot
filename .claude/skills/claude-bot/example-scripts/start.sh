@@ -1,7 +1,7 @@
 #!/bin/bash
 # start.sh — Start the multi-worker orchestrator in a tmux session
 # Usage: bash start.sh <project_dir> [max_cycles] [num_workers]
-# Monitor: tmux attach -t claude-bot
+# Monitor: tmux attach -t <project_folder_name>
 # Stop: bash stop.sh <project_dir>
 
 set -euo pipefail
@@ -11,7 +11,7 @@ PROJECT_DIR="${1:?Usage: bash start.sh <project_dir> [max_cycles] [num_workers]}
 PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
 MAX_CYCLES="${2:-50}"
 NUM_WORKERS="${3:-2}"
-SESSION="claude-bot"
+SESSION="$(basename "$PROJECT_DIR")"
 
 # Validate project directory
 if [ ! -f "${PROJECT_DIR}/.tmp/llm.plan.status" ]; then
@@ -39,7 +39,7 @@ tmux new-session -d -s "$SESSION" -n "orchestrator" \
   "bash ${SCRIPT_DIR}/orchestrator.sh '${PROJECT_DIR}' ${MAX_CYCLES} ${NUM_WORKERS}; echo 'Orchestrator ended. Press enter.'; read"
 
 echo "========================================="
-echo " claude-bot started"
+echo " ${SESSION} started"
 echo "========================================="
 echo ""
 echo " Project:       ${PROJECT_DIR}"

@@ -48,7 +48,7 @@ bash .tmp/claude-bot/start.sh /path/to/your/project
 
 ```bash
 # Watch workers in real-time
-tmux attach -t claude-bot
+tmux attach -t <project-folder-name>
 
 # Stop everything
 bash .tmp/claude-bot/stop.sh /path/to/your/project

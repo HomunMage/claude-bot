@@ -11,7 +11,7 @@ Start a tmux-based orchestrator that runs N workers in parallel to solve project
 
 ## What This Does
 
-1. Creates a tmux session `claude-bot`
+1. Creates a tmux session named after the project folder
 2. Runs an orchestrator (Haiku) that reads `.tmp/llm.plan.status` and assigns tickets to workers
 3. Spawns N workers (Sonnet) in separate tmux windows
 4. Each worker: git clean → implement ticket → test → format → lint → commit
@@ -35,7 +35,7 @@ bash .tmp/claude-bot/start.sh $ARGUMENTS
 
 Monitor:
 ```bash
-tmux attach -t claude-bot
+tmux attach -t <project-folder-name>
 ```
 
 Stop:
@@ -65,7 +65,7 @@ The [example-scripts/](example-scripts/) directory contains **reference implemen
 ## Architecture
 
 ```
-tmux session: "claude-bot"
+tmux session: "<project-folder-name>"
  ├── window 0: orchestrator.sh (Haiku — plans tasks, monitors workers)
  ├── window 1: worker.sh #1   (Sonnet — picks ticket, codes, tests, commits)
  ├── window 2: worker.sh #2   (Sonnet — picks ticket, codes, tests, commits)
