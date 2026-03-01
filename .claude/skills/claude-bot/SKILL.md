@@ -146,7 +146,7 @@ These files live in the **target project**:
 ## Logs
 
 ```
-<project_dir>/out/
+<project_dir>/.tmp/out/
 ├── orchestrator.log
 ├── worker_1.log
 ├── worker_2.log
