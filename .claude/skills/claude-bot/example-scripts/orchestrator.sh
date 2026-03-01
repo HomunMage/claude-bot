@@ -10,10 +10,10 @@ PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
 MAX_CYCLES="${2:-50}"
 NUM_WORKERS="${3:-2}"
 SESSION="$(basename "$PROJECT_DIR")"
-LOG_FILE="${PROJECT_DIR}/out/orchestrator.log"
+LOG_FILE="${PROJECT_DIR}/.tmp/out/orchestrator.log"
 CYCLE=0
 
-mkdir -p "${PROJECT_DIR}/out"
+mkdir -p "${PROJECT_DIR}/.tmp/out"
 
 log() {
   echo "$(date '+%H:%M:%S') [ORCH] $1" | tee -a "$LOG_FILE"

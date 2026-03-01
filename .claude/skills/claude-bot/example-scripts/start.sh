@@ -32,7 +32,7 @@ tmux kill-session -t "$SESSION" 2>/dev/null || true
 rm -f "${PROJECT_DIR}/_trigger_"* "${PROJECT_DIR}/_task_queue"
 rmdir "${PROJECT_DIR}/_git.lock" 2>/dev/null || true
 
-mkdir -p "${PROJECT_DIR}/out"
+mkdir -p "${PROJECT_DIR}/.tmp/out"
 
 # Create tmux session with orchestrator in window 0
 tmux new-session -d -s "$SESSION" -n "orchestrator" \
@@ -54,6 +54,6 @@ echo "   0: orchestrator — task planner + coordinator"
 echo "   1-${NUM_WORKERS}: workers — each in its own tmux window"
 echo ""
 echo " Logs:"
-echo "   ${PROJECT_DIR}/out/orchestrator.log"
-echo "   ${PROJECT_DIR}/out/worker_1.log .. worker_${NUM_WORKERS}.log"
+echo "   ${PROJECT_DIR}/.tmp/out/orchestrator.log"
+echo "   ${PROJECT_DIR}/.tmp/out/worker_1.log .. worker_${NUM_WORKERS}.log"
 echo ""

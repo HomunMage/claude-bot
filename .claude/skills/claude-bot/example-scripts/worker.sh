@@ -9,10 +9,10 @@ PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
 WORKER_ID="${2:?Worker ID required}"
 TASK_DESC="${3:-}"
 TRIGGER_FILE="${PROJECT_DIR}/_trigger_${WORKER_ID}"
-LOG_FILE="${PROJECT_DIR}/out/worker_${WORKER_ID}.log"
+LOG_FILE="${PROJECT_DIR}/.tmp/out/worker_${WORKER_ID}.log"
 GIT_LOCK="${PROJECT_DIR}/_git.lock"
 
-mkdir -p "${PROJECT_DIR}/out"
+mkdir -p "${PROJECT_DIR}/.tmp/out"
 
 log() {
   echo "$(date '+%H:%M:%S') [W${WORKER_ID}] $1" | tee -a "$LOG_FILE"
