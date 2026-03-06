@@ -114,23 +114,12 @@ WORKFLOW — Follow these steps IN ORDER:
 
 2. IMPLEMENT: Write the code changes. Keep changes minimal and focused.
 
-3. TEST: Auto-detect project type and run tests:
-   - If package.json exists → npm test (or yarn test)
-   - If Cargo.toml exists → cargo test
-   - If pyproject.toml or setup.py → pytest
-   - If go.mod → go test ./...
-   - If Makefile with test target → make test
-
-4. FORMAT + LINT:
-   - JS/TS → npx prettier --write . && npx eslint --fix .
-   - Rust → cargo fmt && cargo clippy -- -D warnings
-   - Python → ruff format . && ruff check --fix .
-   - Go → gofmt -w . && golangci-lint run
-   (Only run formatters/linters that exist in the project)
-
-5. GIT COMMIT (with lock):
+3. TEST, FORMAT, LINT, COMMIT:
+   Use Skill(programming) — follow developing.md workflow:
+   test → format → lint → commit (never commit .tmp/).
+   For git commit, use lock:
    while ! mkdir ${GIT_LOCK} 2>/dev/null; do sleep 2; done
-   git add -A
+   git add -A && git reset HEAD .tmp/ 2>/dev/null || true
    git commit -m 'ticket: <description>'
    rmdir ${GIT_LOCK}
 

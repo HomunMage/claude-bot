@@ -27,36 +27,11 @@ git status
 - Stay in scope — don't refactor unrelated code
 - Don't add features beyond what the ticket asks
 
-### Step 4: Test
-Auto-detect project type and run tests:
-- `package.json` → `npm test`
-- `Cargo.toml` → `cargo test`
-- `pyproject.toml` or `setup.py` → `pytest`
-- `go.mod` → `go test ./...`
-- `Makefile` with test target → `make test`
+### Step 4: Test, Format, Lint, Commit
 
-All tests MUST pass before proceeding.
+See [programming/developing.md](.claude/skills/programming/developing.md) — run tests, format, lint, then commit (never commit `.tmp/`).
 
-### Step 5: Format + Lint
-Auto-detect and run formatters/linters:
-- JS/TS → `npx prettier --write .` and `npx eslint --fix .`
-- Rust → `cargo fmt` and `cargo clippy -- -D warnings`
-- Python → `ruff format .` and `ruff check --fix .`
-- Go → `gofmt -w .` and `golangci-lint run`
-
-### Step 6: Git Commit
-```bash
-# Acquire lock (if multi-worker)
-while ! mkdir _git.lock 2>/dev/null; do sleep 2; done
-
-git add -A
-git commit -m "ticket: <short description of what was done>"
-
-# Release lock
-rmdir _git.lock
-```
-
-### Step 7: Update Status
+### Step 5: Update Status
 1. Mark the ticket `[x]` in `.tmp/llm.plan.status`
 2. Append a summary to `.tmp/llm.working.log`:
    ```
@@ -80,12 +55,9 @@ Use `/claude-bot` to set up autonomous agent teams that work while you're away.
 
 See `.claude/skills/claude-bot/` for the full skill, example scripts, and planning workflow.
 
-## Changelog
+## Changelog & Versioning
 
-- Maintain `CHANGELOG.md` at the project root.
-- Use **vMajor.Minor** format only (e.g., `v1.0`, `v1.1`, `v2.0`) — no patch level.
-- Versions may jump (e.g., `v1.1` → `v1.5` or `v1.1` → `v3.0`) — a version jump signals a huge change.
-- Each entry: version, date, and bullet list of what changed in short; not all details.
+See [programming/writelog.md](.claude/skills/programming/writelog.md) — when user specifies a version, update CHANGELOG.md and bump version in package files.
 
 ## Rules
 

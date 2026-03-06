@@ -2,7 +2,7 @@
 name: claude-bot
 description: Start the autonomous multi-agent dev loop — orchestrator + workers in tmux solving tickets from .tmp/llm.plan.status
 disable-model-invocation: true
-argument-hint: <project_dir> [cycles] [workers]
+argument-hint: plan | running | status
 ---
 
 # claude-bot — Autonomous Dev Loop
