@@ -14,3 +14,10 @@ See [developing.md](developing.md) — run tests, format, lint, then commit (nev
 ## Versioning & Changelog
 
 See [writelog.md](writelog.md) — when user specifies a version, update CHANGELOG.md and bump version in package files.
+
+## Temporary Files
+
+- **All temp/scratch work MUST go in `./.tmp/`** (project-local), never `/tmp/`.
+- `.tmp/` should be in `.gitignore` — safe for intermediate outputs, downloads, generated files, build artifacts, etc.
+- Create `.tmp/` if it doesn't exist before writing to it.
+- **Never commit `.tmp/**`.**

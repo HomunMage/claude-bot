@@ -14,15 +14,59 @@ Start a tmux-based orchestrator that runs N workers in parallel to solve project
 1. Creates a tmux session named after the project folder
 2. Runs an orchestrator (Haiku) that reads `.tmp/llm.plan.status` and assigns tickets to workers
 3. Spawns N workers (Sonnet) in separate tmux windows
-4. Each worker: git clean → implement ticket → test → format → lint → commit
+4. Each worker: git clean → implement ticket → `Skill(programming)` → commit
 5. Orchestrator monitors workers (kills if >900s), collects results, loops (50 cycles max)
 
 ## Prerequisites
 
 The target project must have:
 - `.tmp/llm.plan.status` — ticket list with `[ ]` / `[x]` checkboxes
-- `CLAUDE.md` — dev rules (copy from claude-bot/CLAUDE.md template)
 - `README.md` — project overview
+
+## Worker Workflow
+
+### On Start — Read These First
+
+1. `README.md` — project overview, architecture, tech stack
+2. `.tmp/llm.plan.status` — ticket list and current status
+3. `.tmp/llm.working.log` — abstract of recent completed work
+4. `.tmp/llm.working.notes` — detailed working notes (if exists)
+5. Any `.tmp/llm*md` files — design docs, API specs, references
+
+### Step 1: Clean Slate
+```bash
+git status
+# If there are uncommitted changes → git reset --hard HEAD
+```
+
+### Step 2: Pick ONE Ticket
+- Read `.tmp/llm.plan.status`
+- Find the first `[ ]` (unchecked) ticket
+- Work on ONLY that ticket
+
+### Step 3: Implement
+- Make the smallest possible change to complete the ticket
+- Stay in scope — don't refactor unrelated code
+
+### Step 4: Test, Format, Lint, Commit
+Use `Skill(programming)` — follow developing.md workflow.
+
+### Step 5: Update Status
+1. Mark the ticket `[x]` in `.tmp/llm.plan.status`
+2. Append a summary to `.tmp/llm.working.log`:
+   ```
+   [W{id}] <what was done> — <files changed>
+   ```
+
+## Worker Rules
+
+- **ONE ticket per session.** Do not batch multiple tickets.
+- **Never ask questions.** Make reasonable decisions and document them in the commit message.
+- **Stay in your assigned scope.** Don't touch files outside your task boundary.
+- **If stuck after 3 attempts:** `git stash`, write BLOCKED to the trigger file, stop.
+- **All tests must pass** before committing.
+- **Don't break existing tests.**
+- **Commit messages:** `ticket: <verb> <what>` (e.g., `ticket: add user auth endpoint`)
 
 ## Usage
 
@@ -58,7 +102,7 @@ The [example-scripts/](example-scripts/) directory contains **reference implemen
 | [start.sh](example-scripts/start.sh) | tmux session setup |
 | [stop.sh](example-scripts/stop.sh) | Cleanup trigger/lock files |
 | [orchestrator.sh](example-scripts/orchestrator.sh) | Plan → spawn → monitor(900s) → collect loop |
-| [worker.sh](example-scripts/worker.sh) | Clean → read context → work → test/fmt/lint → commit |
+| [worker.sh](example-scripts/worker.sh) | Clean → read context → work → `Skill(programming)` → commit |
 | [checkpoint.sh](example-scripts/checkpoint.sh) | Git commit with lock |
 | [rollback.sh](example-scripts/rollback.sh) | Git reset --hard |
 
@@ -93,12 +137,10 @@ tmux session: "<project-folder-name>"
 
 ```
 1. Clean: git status → reset --hard if dirty
-2. Read: CLAUDE.md, .tmp/llm.plan.status, .tmp/llm.working.log, README.md
+2. Read: .tmp/llm.plan.status, .tmp/llm.working.log, README.md
 3. Work: implement the assigned ticket
-4. Test: auto-detect & run tests
-5. Format + Lint
-6. Commit: git add + commit (with lock)
-7. Signal: write DONE to _trigger_{id}
+4. Skill(programming): test → format → lint → commit
+5. Signal: write DONE to _trigger_{id}
 ```
 
 ## Coordination
@@ -116,7 +158,6 @@ These files live in the **target project**:
 
 | File | Required | Purpose |
 |------|----------|---------|
-| `CLAUDE.md` | Yes | Dev rules — workers read this first |
 | `README.md` | Yes | Project overview |
 | `.tmp/llm.plan.status` | Yes | Ticket list with `[ ]`/`[x]` checkboxes |
 | `.tmp/llm.working.log` | Auto-created | Abstract of completed work (append-only) |

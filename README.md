@@ -12,7 +12,7 @@ Phase 1: Planning (interactive)              Phase 2: Execution (autonomous)
 │  2. Design architecture      │ ───────→  │  2. Spawn workers in tmux    │
 │  3. Break into small tickets │           │  3. Monitor (kill >900s)     │
 │  4. Write .tmp/llm.plan.*    │           │  4. Collect results          │
-│  5. Write CLAUDE.md          │           │  5. Next cycle (x50)         │
+│  5. Write runner scripts      │           │  5. Next cycle (x50)         │
 └──────────────────────────────┘           └──────────────────────────────┘
 ```
 
@@ -24,9 +24,11 @@ Phase 1: Planning (interactive)              Phase 2: Execution (autonomous)
 ## Install
 
 ```bash
-# Copy the skill to your personal Claude skills directory
-cp -r .claude/skills/claude-bot ~/.claude/skills/
+# Copy skills to your personal Claude skills directory
+cp -r .claude/skills/* ~/.claude/skills/
 ```
+
+Use `Skill(claude-bot)` to start.
 
 ## Usage
 

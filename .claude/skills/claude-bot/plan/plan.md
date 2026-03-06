@@ -78,13 +78,6 @@ Once user approves the tickets, create these files in the project:
 ### `.tmp/llm.plan.status`
 The ticket list (as shown above). This is the input for `/claude-bot`.
 
-### `CLAUDE.md`
-Dev rules tailored to THIS project. Customize:
-- Add project-specific test commands
-- Add project-specific format/lint commands
-- Add scope boundaries (which dirs each ticket should touch)
-- Add any conventions the user mentioned
-
 ### `.tmp/llm.working.log`
 Initialize empty (or with a planning entry):
 ```
