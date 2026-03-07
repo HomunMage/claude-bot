@@ -1,8 +1,8 @@
 #!/bin/bash
-# worker.sh — Generic worker: clean → read context → work → test/fmt/lint → commit
+# worker.sh — Sequential pipeline: each step is a fresh claude -p call
 # Usage: bash worker.sh <project_dir> <worker_id> [task_description]
 
-set -uo pipefail
+set -euo pipefail
 
 PROJECT_DIR="${1:?Usage: worker.sh <project_dir> <worker_id> [task_description]}"
 PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
@@ -18,15 +18,28 @@ log() {
   echo "$(date '+%H:%M:%S') [W${WORKER_ID}] $1" | tee -a "$LOG_FILE"
 }
 
+# Run a pipeline step with claude -p
+step() {
+  local step_name="$1"
+  local prompt="$2"
+  log "Step: ${step_name}..."
+  CLAUDECODE= claude -p \
+    --dangerously-skip-permissions \
+    --model sonnet \
+    "${prompt}" 2>&1 | tee -a "$LOG_FILE"
+}
+
+# If any step fails, signal BLOCKED and exit
+trap 'log "Pipeline failed. Writing BLOCKED."; git stash 2>/dev/null; echo "BLOCKED" > "$TRIGGER_FILE"; exit 1' ERR
+
 log "Worker ${WORKER_ID} starting..."
 [ -n "$TASK_DESC" ] && log "Task: ${TASK_DESC}"
 
 # ─── Phase 1: Clean ─────────────────────────────────────────────────────────
-log "Phase 1: Checking git status..."
+log "Cleaning working tree..."
 cd "$PROJECT_DIR" || exit 1
 
 if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-  log "Dirty working tree detected. Resetting to HEAD..."
   git reset --hard HEAD 2>&1 | tee -a "$LOG_FILE"
   git clean -fd 2>&1 | tee -a "$LOG_FILE"
   log "Clean slate restored."
@@ -35,122 +48,80 @@ fi
 # ─── Phase 2: Build context ─────────────────────────────────────────────────
 CONTEXT=""
 
-# Read CLAUDE.md (dev rules)
-if [ -f "${PROJECT_DIR}/CLAUDE.md" ]; then
-  CONTEXT="${CONTEXT}
---- CLAUDE.md (Dev Rules) ---
-$(cat "${PROJECT_DIR}/CLAUDE.md")
+for f in CLAUDE.md README.md; do
+  [ -f "${PROJECT_DIR}/${f}" ] && CONTEXT="${CONTEXT}
+--- ${f} ---
+$(head -200 "${PROJECT_DIR}/${f}")
 "
-fi
+done
 
-# Read README.md
-if [ -f "${PROJECT_DIR}/README.md" ]; then
-  CONTEXT="${CONTEXT}
---- README.md ---
-$(head -200 "${PROJECT_DIR}/README.md")
+for f in .tmp/llm.plan.status .tmp/llm.working.log .tmp/llm.working.notes; do
+  [ -f "${PROJECT_DIR}/${f}" ] && CONTEXT="${CONTEXT}
+--- ${f} ---
+$(tail -100 "${PROJECT_DIR}/${f}")
 "
-fi
+done
 
-# Read .tmp/llm.plan.status (ticket list)
-if [ -f "${PROJECT_DIR}/.tmp/llm.plan.status" ]; then
-  CONTEXT="${CONTEXT}
---- .tmp/llm.plan.status (Tickets) ---
-$(cat "${PROJECT_DIR}/.tmp/llm.plan.status")
-"
-fi
-
-# Read .tmp/llm.working.log (abstract of recent work)
-if [ -f "${PROJECT_DIR}/.tmp/llm.working.log" ]; then
-  CONTEXT="${CONTEXT}
---- .tmp/llm.working.log (Recent Work) ---
-$(tail -50 "${PROJECT_DIR}/.tmp/llm.working.log")
-"
-fi
-
-# Read .tmp/llm.working.notes (detailed notes)
-if [ -f "${PROJECT_DIR}/.tmp/llm.working.notes" ]; then
-  CONTEXT="${CONTEXT}
---- .tmp/llm.working.notes (Detailed Notes) ---
-$(tail -100 "${PROJECT_DIR}/.tmp/llm.working.notes")
-"
-fi
-
-# Read any other .tmp/llm*.md files
 for f in "${PROJECT_DIR}"/.tmp/llm*.md; do
   [ -f "$f" ] || continue
   BASENAME=$(basename "$f")
-  case "$BASENAME" in
-    llm.plan.status|llm.working.log) continue ;;
-  esac
+  case "$BASENAME" in llm.plan.status|llm.working.log|llm.working.notes) continue ;; esac
   CONTEXT="${CONTEXT}
 --- ${BASENAME} ---
 $(head -200 "$f")
 "
 done
 
-# ─── Phase 3: Work ──────────────────────────────────────────────────────────
 if [ -n "$TASK_DESC" ]; then
-  TASK_PROMPT="YOUR ASSIGNED TASK: ${TASK_DESC}
-Focus ONLY on this specific task. Do not work on other tasks."
+  TASK_PROMPT="YOUR ASSIGNED TASK: ${TASK_DESC}"
 else
-  TASK_PROMPT="Pick the first unchecked [ ] ticket from .tmp/llm.plan.status and implement it."
+  TASK_PROMPT="Pick the first unchecked [ ] ticket from .tmp/llm.plan.status."
 fi
 
-log "Phase 2: Calling Claude to work on task..."
-
-CLAUDECODE= claude -p \
-  --dangerously-skip-permissions \
-  --model sonnet \
-  "You are Worker ${WORKER_ID} on an autonomous dev team.
-Working directory: ${PROJECT_DIR}
-
+SHARED_CONTEXT="You are Worker ${WORKER_ID}. Working directory: ${PROJECT_DIR}
 ${CONTEXT}
+${TASK_PROMPT}"
 
-${TASK_PROMPT}
+# ─── Pipeline: each step is a fresh claude -p call ───────────────────────────
+# set -e ensures failure at any step stops the pipeline
 
-WORKFLOW — Follow these steps IN ORDER:
+# Step 1: Understand + Implement
+step "implement" "${SHARED_CONTEXT}
 
-1. UNDERSTAND: Read the relevant source files for your ticket.
+Read the relevant source files, then implement the ticket.
+Keep changes minimal and focused. ONE ticket only."
 
-2. IMPLEMENT: Write the code changes. Keep changes minimal and focused.
+# Step 2: Test + Format + Lint (Skill(programming) developing.md)
+step "test-format-lint" "${SHARED_CONTEXT}
 
-3. TEST, FORMAT, LINT, COMMIT:
-   Use Skill(programming) — follow developing.md workflow:
-   test → format → lint → commit (never commit .tmp/).
-   For git commit, use lock:
+Run the post-code workflow — Use Skill(programming) developing.md:
+1. Auto-detect project type and run tests. All tests MUST pass.
+2. Auto-detect and run formatter.
+3. Auto-detect and run linter.
+Do NOT commit yet. Just ensure code is clean."
+
+# Step 3: Commit (with git lock)
+step "commit" "${SHARED_CONTEXT}
+
+Commit the changes:
+1. Acquire git lock: while ! mkdir ${GIT_LOCK} 2>/dev/null; do sleep 2; done
+2. git add -A && git reset HEAD .tmp/ 2>/dev/null || true
+3. git commit -m 'ticket: <short description>'
+4. Release lock: rmdir ${GIT_LOCK}
+Never commit .tmp/ files."
+
+# Step 4: Update status
+step "update-status" "${SHARED_CONTEXT}
+
+Update status files:
+1. Edit .tmp/llm.plan.status: change [ ] to [x] for the completed ticket
+2. Append to .tmp/llm.working.log: [W${WORKER_ID}] <what was done> — <files changed>
+3. Commit status:
    while ! mkdir ${GIT_LOCK} 2>/dev/null; do sleep 2; done
-   git add -A && git reset HEAD .tmp/ 2>/dev/null || true
-   git commit -m 'ticket: <description>'
-   rmdir ${GIT_LOCK}
+   git add .tmp/llm.plan.status .tmp/llm.working.log
+   git commit -m 'status: mark ticket done [W${WORKER_ID}]'
+   rmdir ${GIT_LOCK}"
 
-6. UPDATE STATUS:
-   - Edit .tmp/llm.plan.status: change [ ] to [x] for your completed ticket
-   - Append to .tmp/llm.working.log: [W${WORKER_ID}] <what you did> — <files changed>
-   - Git commit the status update:
-     while ! mkdir ${GIT_LOCK} 2>/dev/null; do sleep 2; done
-     git add .tmp/llm.plan.status .tmp/llm.working.log
-     git commit -m 'status: mark ticket done [W${WORKER_ID}]'
-     rmdir ${GIT_LOCK}
-
-7. SIGNAL: Write to ${TRIGGER_FILE}:
-   echo 'DONE' > ${TRIGGER_FILE}
-
-IF STUCK after 3 attempts:
-   git stash
-   echo 'BLOCKED' > ${TRIGGER_FILE}
-   Stop immediately.
-
-RULES:
-- ONE ticket only. Do not batch.
-- All tests must pass before committing.
-- Never ask questions. Make reasonable decisions.
-- Keep changes small and focused.
-" 2>&1 | tee -a "$LOG_FILE"
-
-# ─── Phase 4: Ensure signal ─────────────────────────────────────────────────
-if [ ! -f "$TRIGGER_FILE" ]; then
-  log "No trigger file found. Writing BLOCKED."
-  echo "BLOCKED" > "$TRIGGER_FILE"
-fi
-
-log "Worker ${WORKER_ID} finished. Result: $(cat "$TRIGGER_FILE")"
+# ─── Signal done ─────────────────────────────────────────────────────────────
+echo "DONE" > "$TRIGGER_FILE"
+log "Worker ${WORKER_ID} finished. Result: DONE"
