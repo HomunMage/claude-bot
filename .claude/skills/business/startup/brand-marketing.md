@@ -1,8 +1,8 @@
 # Brand Marketing & Business Strategy
 
-Generate brand marketing strategy content (slides or mindmaps).
-
-> **Cross-reference**: Always also read `Skill(project-management)` — brand marketing and project management develop simultaneously and inform each other.
+> **Cross-references**:
+> - Also read [project-management.md](project-management.md) — brand marketing and project management develop simultaneously.
+> - Also read [AAR.md](AAR.md) — quarterly review for continuous improvement.
 
 ## Core Philosophy
 
@@ -78,7 +78,7 @@ When stuck at any level, look at ALL levels below:
 
 ### Management Cycles
 - **OKR**: Each objective with 2-4 key results
-- **AAR**: Quarterly review (see project-management skill)
+- **AAR**: Quarterly review (see AAR.md)
 - **PDCA**: Plan-Do-Check-Act continuous improvement
 
 ## Key References

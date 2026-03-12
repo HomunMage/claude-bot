@@ -1,8 +1,8 @@
 # Project Management & Product Development
 
-Generate project management and product development content (slides or mindmaps).
-
-> **Cross-reference**: Always also read `Skill(brand-marketing)` — project management and brand marketing develop simultaneously and inform each other.
+> **Cross-references**:
+> - Also read [brand-marketing.md](brand-marketing.md) — project management and brand marketing develop simultaneously.
+> - Also read [AAR.md](AAR.md) — quarterly review table with detailed items and categories.
 
 ## Core Concept: Pyramid Hierarchy
 
@@ -59,26 +59,6 @@ Brainstorming → PoC → Whitebox → Gameplay → Vertical Slice → Mass Prod
 1. **Game Design Document** (GDD) — vision, pillars, systems, gameplay, story, art style
 2. **Milestone & Work Plan** — break pillars → systems → tasks, schedule with buffers
 3. **Budget & Cash Flow** — track ALL expenses with reasons; everyone gets paid (even minimum wage)
-
-## Quarterly Review: AAR Table
-
-### Core Values (ensure team alignment)
-- What is the project's goal?
-- Does it align with core business values?
-- What specific value does it add?
-
-### Competitive Analysis
-- Who else is doing similar work? Study and reference them.
-
-### Strategic Direction (new conclusions, future adjustments)
-- Did we achieve our goals? How to set next quarter's goals?
-- What did we learn?
-- What systems/processes can improve execution?
-
-### Tactical Execution (plan next actions)
-- What went well? Would we do it again?
-- What went poorly? What would we do differently?
-- Should I do this personally, or delegate/outsource?
 
 ## Accelerating Development
 
