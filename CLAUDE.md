@@ -7,4 +7,4 @@
 
 ## Create Skills
 
-- Use `Skill(claude-skills)` for developing.
+- Use `Skill(claude-skills-creating)` for developing.
