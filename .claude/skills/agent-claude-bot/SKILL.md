@@ -14,7 +14,7 @@ Start a tmux-based orchestrator that runs N workers in parallel to solve project
 1. Creates a tmux session named after the project folder
 2. Runs an orchestrator (Haiku) that reads `.tmp/llm.plan.status` and assigns tickets to workers
 3. Spawns N workers (Sonnet) in separate tmux windows
-4. Each worker: git clean → implement ticket → `Skill(programming)` → commit
+4. Each worker: git clean → implement ticket → `Skill(developing-programming)` → commit
 5. Orchestrator monitors workers (kills if >900s), collects results, loops (50 cycles max)
 
 ## Prerequisites
@@ -49,7 +49,7 @@ git status
 - Stay in scope — don't refactor unrelated code
 
 ### Step 4: Test, Format, Lint, Commit
-Use `Skill(programming)` — follow developing.md workflow.
+Use `Skill(developing-programming)` — follow developing.md workflow.
 
 ### Step 5: Update Status
 1. Mark the ticket `[x]` in `.tmp/llm.plan.status`
@@ -135,13 +135,13 @@ tmux session: "<project-folder-name>"
 
 ### Worker Cycle (one ticket per round)
 
-```
+
 1. Clean: git status → reset --hard if dirty
 2. Read: .tmp/llm.plan.status, .tmp/llm.working.log, README.md
 3. Work: implement the assigned ticket
-4. Skill(programming): test → format → lint → commit
+4. `Skill(developing-programming)`: test → format → lint → commit
 5. Signal: write DONE to _trigger_{id}
-```
+
 
 ## Coordination
 

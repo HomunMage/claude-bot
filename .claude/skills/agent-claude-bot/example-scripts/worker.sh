@@ -94,7 +94,7 @@ Keep changes minimal and focused. ONE ticket only."
 # Step 2: Test + Format + Lint (Skill(programming) developing.md)
 step "test-format-lint" "${SHARED_CONTEXT}
 
-Run the post-code workflow — Use Skill(programming) developing.md:
+Run the post-code workflow — Use Skill(developing-programming) developing.md:
 1. Auto-detect project type and run tests. All tests MUST pass.
 2. Auto-detect and run formatter.
 3. Auto-detect and run linter.

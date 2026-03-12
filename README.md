@@ -28,7 +28,7 @@ Phase 1: Planning (interactive)              Phase 2: Execution (autonomous)
 cp -r .claude/skills/* ~/.claude/skills/
 ```
 
-Use `Skill(claude-bot)` to start.
+Use `Skill(agent-claude-bot)` to start.
 
 ## Usage
 

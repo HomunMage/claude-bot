@@ -1,10 +1,10 @@
 # Method
 
 ## Dev Rules
-- Use `Skill(claude-bot)` for developing.
+- Use `Skill(agent-claude-bot)` for developing.
 
 ## 
 
 ## Create Skills
 
-- Use `Skill(claude-skills-creating)` for developing.
+- Use `Skill(agent-claude-skills-creating)` for creating skills.
