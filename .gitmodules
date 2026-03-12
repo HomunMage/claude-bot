@@ -1,0 +1,4 @@
+[submodule "skills"]
+	path = .claude/skills
+	url = https://github.com/HomunMage/claude-skills.git
+	branch = main
